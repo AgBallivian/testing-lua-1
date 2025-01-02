@@ -17,8 +17,15 @@ end
 
 -- Update the ball's position
 function Ball:update(dt)
+    local ballGravity = 500 -- Acceleration due to gravity
+    self.dy = self.dy + ballGravity * dt
     self.x = self.x + self.dx * dt
     self.y = self.y + self.dy * dt
+end
+
+--function to delete ball
+function Ball:delete()
+    self = nil
 end
 
 -- Draw the ball
@@ -38,11 +45,18 @@ end
 
 -- Check collision with a rectangle (e.g., paddle)
 function Ball:checkCollision(rect)
+    -- closest points of rectangle
     local nearestX = math.max(rect.x, math.min(self.x, rect.x + rect.width))
     local nearestY = math.max(rect.y, math.min(self.y, rect.y + rect.height))
     local dx = self.x - nearestX
     local dy = self.y - nearestY
     return (dx * dx + dy * dy) < (self.radius * self.radius)
+end
+
+function Ball:giveImpulse(direction)
+    --direction is a table with x and y components
+    self.dx = self.dx + direction.x
+    self.dy = self.dy + direction.y
 end
 
 return Ball
